@@ -11,7 +11,7 @@
 
 * Clone this repository
 
-    ```$ git clone https://github.com/irmantas/symfony2-vagrant.git```
+    ```$ git clone https://github.com/sloba88/symfony2-vagrant.git```
     
 * install git submodules
     ```$ git submodule update --init```
