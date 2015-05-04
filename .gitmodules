@@ -16,9 +16,6 @@
 [submodule "puppet/modules/apt"]
 	path = puppet/modules/apt
 	url = https://github.com/puppetlabs/puppetlabs-apt
-[submodule "puppet/modules/phpqatools"]
-	path = puppet/modules/phpqatools
-	url = https://github.com/rafaelfelix/puppet-phpqatools
 [submodule "puppet/modules/puppetlabs-stdlib"]
 	path = puppet/modules/puppetlabs-stdlib
 	url = https://github.com/puppetlabs/puppetlabs-stdlib.git
@@ -37,3 +34,6 @@
 [submodule "puppet/modules/augeas"]
 	path = puppet/modules/augeas
 	url = https://github.com/camptocamp/puppet-augeas.git
+[submodule "puppet/modules/phpqatools"]
+	path = puppet/modules/phpqatools
+	url = https://github.com/sloba88/puppet-phpqatools.git

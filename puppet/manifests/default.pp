@@ -44,19 +44,9 @@ class dev-packages {
         require => Exec['add node package'],
     }
 
-    exec { 'install capifony using RubyGems':
-        command => 'gem install capifony',
-        require => Package["rubygems"],
-    }
-
     exec { 'install sass with compass using RubyGems':
         command => 'gem install compass',
         require => Package["rubygems"],
-    }
-
-    exec { 'install capistrano_rsync_with_remote_cache using RubyGems':
-        command => 'gem install capistrano_rsync_with_remote_cache',
-        require => Package["capistrano"],
     }
 }
 
@@ -210,7 +200,7 @@ class composer {
     }
 
     exec { 'composer self update':
-        command => 'composer self-update',
+        command => 'COMPOSER_HOME="/usr/bin/composer" composer self-update',
         require => [Package['php5-cli'], Package['curl'], Exec['install composer php dependency management']],
     }
 }
