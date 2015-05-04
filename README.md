@@ -53,6 +53,7 @@
 * [Capifony](http://capifony.org/)
 * [phpqatools](http://phpqatools.org/) using puppet module from ([https://github.com/rafaelfelix/puppet-phpqatools](https://github.com/rafaelfelix/puppet-phpqatools))
 * [memcached](http://memcached.org/)
+* [elasticsearch](https://www.elastic.co/)
 
 ## Thanks to
 
