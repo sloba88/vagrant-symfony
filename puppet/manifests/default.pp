@@ -13,19 +13,35 @@ class dev-packages {
     include gcc
     include wget
 
-    $devPackages = [ "vim", "curl", "git", "nodejs", "npm", "capistrano", "rubygems", "openjdk-7-jdk", "libaugeas-ruby" ]
+    $devPackages = [ "vim", "curl", "git", "capistrano", "rubygems", "openjdk-7-jdk", "libaugeas-ruby", "locate" ]
     package { $devPackages:
         ensure => "installed",
         require => Exec['apt-get update'],
     }
+    
+    exec { 'add-apt-repository ppa:chris-lea/node.js':
+        command => '/usr/bin/add-apt-repository ppa:chris-lea/node.js',
+        require => Package["python-software-properties"],
+    }
+	
+	exec { 'add node package':
+        command => '/usr/bin/apt-get update && /usr/bin/apt-get install -y nodejs',
+        require => Exec['add-apt-repository ppa:chris-lea/node.js'],
+    }
+
 	exec { 'enable ability to install npm packages':
 		command => 'npm config set registry http://registry.npmjs.org/',
-		require => Package["npm"],
+		require => Exec['add node package'],
 	}
+	
+	exec { 'upgrade npm':
+        command => 'sudo npm install npm -g',
+        require => Exec['add node package'],
+    }
 	
     exec { 'install less using npm':
         command => 'npm install less -g',
-        require => Package["npm"],
+        require => Exec['add node package'],
     }
 
     exec { 'install capifony using RubyGems':
@@ -219,3 +235,18 @@ include composer
 include phpqatools
 include memcached
 include redis
+
+class { 'elasticsearch':
+  manage_repo  => true,
+  repo_version => '1.5',
+}
+
+elasticsearch::instance { 'es-01':
+  config => { 
+  'cluster.name' => 'vagrant_elasticsearch',
+  'index.number_of_replicas' => '0',
+  'index.number_of_shards'   => '1',
+  'network.host' => '0.0.0.0'
+  },        # Configuration hash
+  init_defaults => { } # Init defaults hash
+}
