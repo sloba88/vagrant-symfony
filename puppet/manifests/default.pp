@@ -44,6 +44,11 @@ class dev-packages {
         require => Exec['add node package'],
     }
 
+    exec { 'install bower using npm':
+        command => 'npm install bower -g',
+        require => Exec['install less using npm'],
+    }
+
     exec { 'install sass with compass using RubyGems':
         command => 'gem install compass',
         require => Package["rubygems"],
