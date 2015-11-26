@@ -49,6 +49,11 @@ class dev-packages {
         require => Exec['install less using npm'],
     }
 
+    exec { 'install requirejs using npm':
+        command => 'npm install -g requirejs',
+        require => Exec['install less using npm'],
+    }
+
     exec { 'install sass with compass using RubyGems':
         command => 'gem install compass',
         require => Package["rubygems"],
@@ -63,12 +68,10 @@ class nginx-setup {
         ensure => present,
     }
 
-    file { '/etc/nginx/sites-available/default':
-        owner  => root,
-        group  => root,
-        ensure => file,
-        mode   => 644,
-        source => '/vagrant/files/nginx/default',
+    file { "/etc/nginx/sites-available/default":
+        notify => Service["nginx"],
+        ensure => link,
+        target => "/vagrant/files/nginx/default",
         require => Package["nginx"],
     }
 
@@ -78,18 +81,41 @@ class nginx-setup {
         target => "/etc/nginx/sites-available/default",
         require => Package["nginx"],
     }
+
+
 }
 
-class { "mysql":
-    root_password => 'auto',
-}
+class mysql-access-setup {
 
-mysql::grant { 'symfony':
-    mysql_privileges => 'ALL',
-    mysql_password => 'symfony-vagrant',
-    mysql_db => 'symfony',
-    mysql_user => 'symfony',
-    mysql_host => 'localhost',
+    class { "mysql":
+        root_password => 'root',
+    }
+
+    mysql::grant { '*':
+        mysql_privileges => 'ALL',
+        mysql_user     => 'root',
+        mysql_password => 'root',
+        mysql_host     => '%',
+    }
+
+    mysql::grant { 'livedb':
+        mysql_privileges => 'ALL',
+        mysql_user     => 'root',
+        mysql_password => 'root',
+        mysql_host     => '%',
+    }
+
+    include mysql
+
+    exec { 'set access':
+        command => 'sed -i "s/^bind-address/#bind-address/" /etc/mysql/my.cnf',
+        require => Package["mysql"],
+    }
+
+    exec { 'reset mysql':
+        command => '/etc/init.d/mysql restart',
+        require => Exec['set access']
+    }
 }
 
 class php-setup {
@@ -204,10 +230,24 @@ class composer {
         require => [Package['php5-cli'], Package['curl']],
     }
 
-    exec { 'composer self update':
-        command => 'COMPOSER_HOME="/usr/bin/composer" composer self-update',
-        require => [Package['php5-cli'], Package['curl'], Exec['install composer php dependency management']],
+    #exec { 'composer self update':
+    #    command => 'COMPOSER_HOME="/usr/bin/composer" composer self-update',
+    #    require => [Package['php5-cli'], Package['curl'], Exec['install composer php dependency management']],
+    #}
+}
+
+class ohmyzsh-setup {
+    class { 'ohmyzsh': }
+
+    ohmyzsh::install { 'vagrant': }
+    ohmyzsh::theme { ['vagrant']: theme => 'robbyrussell' } # specific theme
+
+    file_line { 'fix bug with tab':
+        path => "/home/vagrant/.zshrc",
+        line => "export LC_ALL=en_US.UTF-8",
+        require => Package['zsh']
     }
+
 }
 
 class memcached {
@@ -216,8 +256,28 @@ class memcached {
     }
 }
 
+class elasticsearch-setup {
+
+    class { 'elasticsearch':
+      manage_repo  => true,
+      repo_version => '1.5',
+    }
+
+    elasticsearch::instance { 'es-01':
+      config => {
+      'cluster.name' => 'vagrant_elasticsearch',
+      'index.number_of_replicas' => '0',
+      'index.number_of_shards'   => '1',
+      'network.host' => '0.0.0.0'
+      },        # Configuration hash
+      init_defaults => { } # Init defaults hash
+    }
+}
+
 class { 'apt':
-    always_apt_update    => true
+    update => {
+        frequency => 'always',
+  },
 }
 
 Exec["apt-get update"] -> Package <| |>
@@ -230,18 +290,9 @@ include composer
 include phpqatools
 include memcached
 include redis
+include mysql-access-setup
+include ohmyzsh-setup
+include elasticsearch-setup
 
-class { 'elasticsearch':
-  manage_repo  => true,
-  repo_version => '1.5',
-}
 
-elasticsearch::instance { 'es-01':
-  config => { 
-  'cluster.name' => 'vagrant_elasticsearch',
-  'index.number_of_replicas' => '0',
-  'index.number_of_shards'   => '1',
-  'network.host' => '0.0.0.0'
-  },        # Configuration hash
-  init_defaults => { } # Init defaults hash
-}
+
