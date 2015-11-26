@@ -2,7 +2,7 @@
 
 
 ## Installation
-####This setup is based and tested with Ubuntu Precise 64 bit base box, with Vagrant 1.0.5 version (should be working with 1.1)
+####This setup is based and tested with Ubuntu Precise 64 bit base box, with Vagrant 1.7.4 version
 
 * Install Vagrant using using the [installation instructions](http://docs.vagrantup.com/v2/installation/index.html)
 
@@ -19,14 +19,15 @@
 * run vagrant (for the first time it should take up to 10-15 min)
     ```$ vagrant up```
     
-* Web server is accessible with http://33.33.33.100 (IP address can be changed in Vagrantfile)
+* Web server is accessible with http://11.11.11.10 (IP address can be changed in Vagrantfile)
 
-* PhpMyAdmin is accessible with http://33.33.33.100/phpmyadmin
+* PhpMyAdmin is accessible with http://11.11.11.10/phpmyadmin
 
 * Vagrant automatically setups database with this setup:
 
-    * Username: symfony
-    * Password: symfony-vagrant
+    * Host: 33.33.33.10
+    * Username: root
+    * Password: root
     * Database: symfony
 
 ## Installed components
@@ -55,38 +56,34 @@
 * [phpqatools](http://phpqatools.org/) using puppet module from ([https://github.com/rafaelfelix/puppet-phpqatools](https://github.com/rafaelfelix/puppet-phpqatools))
 * [memcached](http://memcached.org/)
 * [elasticsearch](https://www.elastic.co/)
-
-## Thanks to
-
-* [example42](https://github.com/example42) - for great nginx\mysql templates
-* [caramba1337](https://github.com/caramba1337) - for great ideas
-* [kertz](https://github.com/kertz) - for great ideas
-* [Markus Fischer](https://github.com/mfn) - for contribution
-* [Gustavo Schirmer](https://github.com/hurrycaner) - for contribution
+* [ohmyzsh](https://github.com/robbyrussell/oh-my-zsh)
 
 ## Hints
 ####Startup speed
 To speed up the startup process use ```$ vagrant up --no-provision``` (thanks to [caramba1337](https://github.com/caramba1337))
 
-####Install Symfony Standard edition
+## Sharing SSH key with the host machine
+To share your public key with your host machine make sure to add config in ssh folder 
+```nano ~/.ssh/config ```
+
+With content:
+
+
+    Host 127.0.0.1
+      ForwardAgent yes
+
+Check if your ssh key is added to local ssh-agent with
+
+```ssh-add -l```
+    
+If not add it:
+
+``` ssh-add ~/.ssh/id_rsa ```
+
+
+####How to work
 * SSH to vagrant ```$ vagrant ssh```
-* Clone symfony standard edition to somewhere temporary
-    
-    ```$ git clone https://github.com/symfony/symfony-standard.git /tmp/symfony```
-    
-* Move symfony repository to server document root
 
-    ```$ mv /tmp/symfony/.git /vagrant/www/```
+* Navigate to ```/vagrant/www/```
 
-* Reset repository to restore project files
-    
-    ```$ cd /vagrant/www && git reset --hard HEAD```
-
-* Install dependencies
-
-    ```$ cd /vagrant/www && composer update```
-    
-* Edit ```web/app_dev.php``` to allow host
-
-## TODO
-You tell me
+* Commit git changes from inside the virtual machine
