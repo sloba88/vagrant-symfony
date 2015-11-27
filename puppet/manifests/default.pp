@@ -98,7 +98,7 @@ class mysql-access-setup {
         mysql_host     => '%',
     }
 
-    mysql::grant { 'livedb':
+    mysql::grant { 'symfony':
         mysql_privileges => 'ALL',
         mysql_user     => 'root',
         mysql_password => 'root',
