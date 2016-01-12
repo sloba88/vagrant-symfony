@@ -217,10 +217,10 @@ class php-setup {
         require => Package["php5-fpm"],
     }
 
-    service { "mongodb":
-        ensure => running,
-        require => Package["mongodb"],
-    }
+    #service { "mongodb":
+    #    ensure => running,
+    #    require => Package["mongodb"],
+    #}
 }
 
 class composer {
@@ -280,6 +280,23 @@ class { 'apt':
   },
 }
 
+class mongodb-setup {
+
+   # include mongodb
+
+    class {'::mongodb::globals':
+    manage_package_repo => true,
+    bind_ip             => ["127.0.0.1"],
+      }->
+    class {'::mongodb::server':
+        port    => 27017,
+        verbose => true,
+        ensure  => "present"
+      }->
+    class {'::mongodb::client': }
+
+}
+
 Exec["apt-get update"] -> Package <| |>
 
 include system-update
@@ -293,6 +310,7 @@ include redis
 include mysql-access-setup
 include ohmyzsh-setup
 include elasticsearch-setup
+include mongodb-setup
 
 
 

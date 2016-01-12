@@ -16,9 +16,6 @@
 [submodule "puppet/modules/apt"]
 	path = puppet/modules/apt
 	url = https://github.com/puppetlabs/puppetlabs-apt
-[submodule "puppet/modules/puppetlabs-stdlib"]
-	path = puppet/modules/puppetlabs-stdlib
-	url = https://github.com/puppetlabs/puppetlabs-stdlib.git
 [submodule "puppet/modules/gcc"]
 	path = puppet/modules/gcc
 	url = https://github.com/puppetlabs/puppetlabs-gcc.git
@@ -43,3 +40,6 @@
 [submodule "puppet/modules/ohmyzsh"]
 	path = puppet/modules/ohmyzsh
 	url = https://github.com/acme/puppet-acme-oh-my-zsh.git
+[submodule "puppet/modules/mongodb"]
+	path = puppet/modules/mongodb
+	url = https://github.com/puppetlabs/puppetlabs-mongodb.git
