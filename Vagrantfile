@@ -15,7 +15,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.provider "virtualbox" do |v|
       v.memory = 4096
-      v.cpus = 4
+      v.cpus = 8
     end
 
     config.vm.provision :puppet do |puppet|

@@ -18,6 +18,10 @@ class dev-packages {
         ensure => "installed",
         require => Exec['apt-get update'],
     }
+
+    package { "python-software-properties":
+        ensure => present,
+    }
     
     exec { 'add-apt-repository ppa:chris-lea/node.js':
         command => '/usr/bin/add-apt-repository ppa:chris-lea/node.js',
@@ -63,10 +67,6 @@ class dev-packages {
 class nginx-setup {
     
     include nginx
-
-    package { "python-software-properties":
-        ensure => present,
-    }
 
     file { "/etc/nginx/sites-available/default":
         notify => Service["nginx"],
@@ -282,11 +282,9 @@ class { 'apt':
 
 class mongodb-setup {
 
-   # include mongodb
-
     class {'::mongodb::globals':
-    manage_package_repo => true,
-    bind_ip             => ["127.0.0.1"],
+        manage_package_repo => true,
+        repo_location             => 'http://repo.mongodb.org/apt/ubuntu',
       }->
     class {'::mongodb::server':
         port    => 27017,
@@ -300,16 +298,16 @@ class mongodb-setup {
 Exec["apt-get update"] -> Package <| |>
 
 include system-update
-include dev-packages
-include nginx-setup
-include php-setup
-include composer
-include phpqatools
-include memcached
-include redis
-include mysql-access-setup
-include ohmyzsh-setup
-include elasticsearch-setup
+#include dev-packages
+#include nginx-setup
+#include php-setup
+#include composer
+#include phpqatools
+#include memcached
+#include redis
+#include mysql-access-setup
+#include ohmyzsh-setup
+#include elasticsearch-setup
 include mongodb-setup
 
 
