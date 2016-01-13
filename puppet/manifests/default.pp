@@ -247,7 +247,6 @@ class ohmyzsh-setup {
         line => "export LC_ALL=en_US.UTF-8",
         require => Package['zsh']
     }
-
 }
 
 class memcached {
@@ -284,7 +283,7 @@ class mongodb-setup {
 
     class {'::mongodb::globals':
         manage_package_repo => true,
-        repo_location             => 'http://repo.mongodb.org/apt/ubuntu',
+        version => '3.2.0'
       }->
     class {'::mongodb::server':
         port    => 27017,
@@ -298,17 +297,17 @@ class mongodb-setup {
 Exec["apt-get update"] -> Package <| |>
 
 include system-update
-#include dev-packages
-#include nginx-setup
-#include php-setup
-#include composer
-#include phpqatools
-#include memcached
-#include redis
-#include mysql-access-setup
-#include ohmyzsh-setup
-#include elasticsearch-setup
+include dev-packages
+include nginx-setup
 include mongodb-setup
+include php-setup
+include composer
+include phpqatools
+include memcached
+include redis
+include mysql-access-setup
+include ohmyzsh-setup
+include elasticsearch-setup
 
 
 
