@@ -133,10 +133,10 @@ class php-setup {
         require => Exec['add-apt-repository ppa:ondrej/php5'],
     }
 
-    package { "mongodb":
-        ensure => present,
-        require => Package[$php],
-    }
+    #package { "mongodb":
+    #    ensure => present,
+    #    require => Package[$php],
+    #}
 
     package { $php:
         notify => Service['php5-fpm'],
