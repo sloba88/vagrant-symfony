@@ -1,5 +1,5 @@
 #Symfony 2 Vagrant Development setup
-
+(originally forked from irmantas/symfony2-vagrant) 
 
 ## Installation
 ####This setup is based and tested with Ubuntu Trusty(14.04) 64 bit base box, with Vagrant 1.7.4 version
@@ -11,7 +11,7 @@
 
 * Clone this repository
 
-    ```$ git clone https://github.com/sloba88/symfony2-vagrant.git```
+    ```$ git clone https://github.com/sloba88/vagrant-symfony.git```
     
 * install git submodules
     ```$ git submodule update --init```
