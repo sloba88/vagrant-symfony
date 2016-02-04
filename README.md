@@ -2,7 +2,7 @@
 
 
 ## Installation
-####This setup is based and tested with Ubuntu Precise 64 bit base box, with Vagrant 1.7.4 version
+####This setup is based and tested with Ubuntu Trusty(14.04) 64 bit base box, with Vagrant 1.7.4 version
 
 * Install Vagrant using using the [installation instructions](http://docs.vagrantup.com/v2/installation/index.html)
 
@@ -35,17 +35,17 @@
 * [Puppet](https://puppetlabs.com/) (3.7.5)
 * [Nginx](http://nginx.org/en/) using puppet module from [example42](https://github.com/example42/puppet-nginx)
 * [MySQL](http://www.mysql.com/) using puppet module from [example42](https://github.com/example42/puppet-mysql)
-* [PHP-FPM](http://php-fpm.org/) (PHP 5.5.24)
+* [PHP-FPM](http://php-fpm.org/) (PHP 5.6.17)
 * [PhpMyAdmin](http://www.phpmyadmin.net/home_page/index.php)
 * [MongoDB](http://www.mongodb.org/)
 * [Redis](http://redis.io/)
-* [GiT](http://git-scm.com/) (1.7.9.5)
+* [GiT](http://git-scm.com/) (1.9.1)
 * [Composer](http://getcomposer.org) installed globaly (use ```$ composer self-update``` to get the newest version)
 * [Vim](http://www.vim.org/)
 * [PEAR](http://pear.php.net/)
 * [cURL](http://curl.haxx.se/)
 * [Node.js](http://nodejs.org/) (v0.10.37)
-* [npm](https://npmjs.org/) (2.9.0)
+* [npm](https://npmjs.org/) (3.6.0)
 * [less](http://lesscss.org/)
 * [OpenJDK](http://openjdk.java.net/)
 * [sass](http://sass-lang.com/)
