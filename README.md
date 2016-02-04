@@ -2,7 +2,7 @@
 (originally forked from irmantas/symfony2-vagrant) 
 
 ## Installation
-####This setup is based and tested with Ubuntu Trusty(14.04) 64 bit base box, with Vagrant 1.7.4 version
+####This setup is based and tested with Ubuntu Trusty(14.04) 64 bit base box, with Vagrant 1.7.4 version and latest Virtual Box
 
 * Install Vagrant using using the [installation instructions](http://docs.vagrantup.com/v2/installation/index.html)
 
