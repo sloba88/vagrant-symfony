@@ -4,10 +4,9 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-    config.vm.box = "precise64"
-    config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+    config.vm.box = "ubuntu/trusty64"
     config.vm.network "private_network", ip: "33.33.33.100"
-    config.vm.network :forwarded_port, guest: 3306, host: 1235
+    config.vm.network :forwarded_port, guest: 3306, host: 1236
     config.ssh.forward_agent = true
     config.ssh.insert_key = true
     config.vm.synced_folder ".", "/vagrant",
@@ -18,6 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.provider "virtualbox" do |v|
       v.memory = 4096
       v.cpus = 8
+      v.name = "ubuntu14.04"
     end
 
     config.vm.provision :puppet do |puppet|

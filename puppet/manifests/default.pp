@@ -13,7 +13,7 @@ class dev-packages {
     include gcc
     include wget
 
-    $devPackages = [ "vim", "curl", "git", "capistrano", "rubygems", "openjdk-7-jdk", "libaugeas-ruby", "locate" ]
+    $devPackages = [ "vim", "curl", "git", "rubygems-integration", "openjdk-7-jdk", "libaugeas-ruby", "locate" ]
     package { $devPackages:
         ensure => "installed",
         require => Exec['apt-get update'],
@@ -21,6 +21,22 @@ class dev-packages {
 
     package { "python-software-properties":
         ensure => present,
+    }
+
+    #install ruby 2.2
+    exec { 'add-apt-repository ppa:brightbox/ruby-ng':
+        command => '/usr/bin/add-apt-repository ppa:brightbox/ruby-ng',
+        require => Package["python-software-properties"],
+    }
+
+    exec { 'install ruby 2.2':
+        command => '/usr/bin/apt-get update && /usr/bin/apt-get install -y ruby2.2',
+        require => Exec['add-apt-repository ppa:brightbox/ruby-ng'],
+    }
+
+    exec { 'install ruby 2.2-dev':
+        command => '/usr/bin/apt-get install -y ruby2.2-dev',
+        require => Exec['install ruby 2.2'],
     }
     
     exec { 'add-apt-repository ppa:chris-lea/node.js':
@@ -60,7 +76,17 @@ class dev-packages {
 
     exec { 'install sass with compass using RubyGems':
         command => 'gem install compass',
-        require => Package["rubygems"],
+        require => Package["rubygems-integration"],
+    }
+
+    exec { 'install capistrano 3 using RubyGems':
+        command => 'gem install capistrano',
+        require => Package["rubygems-integration"],
+    }
+
+    exec { 'install bundler using RubyGems':
+        command => 'gem install bundler',
+        require => Package["rubygems-integration"],
     }
 }
 
@@ -122,15 +148,15 @@ class php-setup {
 
     $php = ["php5-fpm", "php5-cli", "php5-dev", "php5-gd", "php5-curl", "php-apc", "php5-mcrypt", "php5-xdebug", "php5-sqlite", "php5-mysql", "php5-memcache", "php5-intl", "php5-tidy", "php5-imap", "php5-imagick"]
 
-    exec { 'add-apt-repository ppa:ondrej/php5':
-        command => '/usr/bin/add-apt-repository ppa:ondrej/php5',
+    exec { 'add-apt-repository ppa:ondrej/php5-5.6':
+        command => '/usr/bin/add-apt-repository ppa:ondrej/php5-5.6',
         require => Package["python-software-properties"],
     }
 
-    exec { 'apt-get update for ondrej/php5':
+    exec { 'apt-get update for ondrej/php5-5.6':
         command => '/usr/bin/apt-get update',
         before => Package[$php],
-        require => Exec['add-apt-repository ppa:ondrej/php5'],
+        require => Exec['add-apt-repository ppa:ondrej/php5-5.6'],
     }
 
     #package { "mongodb":
