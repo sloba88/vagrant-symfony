@@ -19,9 +19,9 @@
 * run vagrant (for the first time it should take up to 10-15 min)
     ```$ vagrant up```
     
-* Web server is accessible with http://11.11.11.10 (IP address can be changed in Vagrantfile)
+* Web server is accessible with http://33.33.33.10 (IP address can be changed in Vagrantfile)
 
-* PhpMyAdmin is accessible with http://11.11.11.10/phpmyadmin
+* PhpMyAdmin is accessible with http://33.33.33.10/phpmyadmin
 
 * Vagrant automatically setups database with this setup:
 
