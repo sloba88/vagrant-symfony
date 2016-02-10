@@ -7,9 +7,6 @@
 [submodule "puppet/modules/puppi"]
 	path = puppet/modules/puppi
 	url = https://github.com/example42/puppi.git
-[submodule "puppet/modules/varnish"]
-	path = puppet/modules/varnish
-	url = https://github.com/alvagante/puppet-varnish
 [submodule "puppet/modules/pear"]
 	path = puppet/modules/pear
 	url = https://github.com/rafaelfelix/puppet-pear.git
@@ -46,3 +43,6 @@
 [submodule "puppet/modules/mongodb"]
 	path = puppet/modules/mongodb
 	url = https://github.com/olbat/puppetlabs-mongodb.git
+[submodule "puppet/modules/varnish"]
+	path = puppet/modules/varnish
+	url = https://github.com/alvagante/puppet-varnish

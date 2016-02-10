@@ -1,14 +1,14 @@
 Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ] }
 
 
-class system-update {
+class system_update {
 
     exec { 'apt-get update':
         command => 'apt-get update',
     }
 }
 
-class dev-packages {
+class dev_packages {
 
     include gcc
     include wget
@@ -90,9 +90,16 @@ class dev-packages {
     }
 }
 
-class nginx-setup {
+class nginx_setup {
     
-    include nginx
+    #include nginx
+
+    class { "nginx":
+          worker_connections => 4096,
+          keepalive_timeout => 120,
+          client_max_body_size => '200m',
+        }
+
 
     file { "/etc/nginx/sites-available/default":
         notify => Service["nginx"],
@@ -111,7 +118,7 @@ class nginx-setup {
 
 }
 
-class mysql-access-setup {
+class mysql_access_setup {
 
     class { "mysql":
         root_password => 'root',
@@ -144,7 +151,7 @@ class mysql-access-setup {
     }
 }
 
-class php-setup {
+class php_setup {
 
     $php = ["php5-fpm", "php5-cli", "php5-dev", "php5-gd", "php5-curl", "php-apc", "php5-mcrypt", "php5-xdebug", "php5-sqlite", "php5-mysql", "php5-memcache", "php5-intl", "php5-tidy", "php5-imap", "php5-imagick"]
 
@@ -158,11 +165,6 @@ class php-setup {
         before => Package[$php],
         require => Exec['add-apt-repository ppa:ondrej/php5-5.6'],
     }
-
-    #package { "mongodb":
-    #    ensure => present,
-    #    require => Package[$php],
-    #}
 
     package { $php:
         notify => Service['php5-fpm'],
@@ -203,7 +205,7 @@ class php-setup {
         owner  => root,
         group  => root,
         ensure => file,
-        mode   => 644,
+        mode   => "644",
         source => '/vagrant/files/php/cli/php.ini',
         require => Package[$php],
     }
@@ -213,7 +215,7 @@ class php-setup {
         owner  => root,
         group  => root,
         ensure => file,
-        mode   => 644,
+        mode   => "644",
         source => '/vagrant/files/php/fpm/php.ini',
         require => Package[$php],
     }
@@ -223,7 +225,7 @@ class php-setup {
         owner  => root,
         group  => root,
         ensure => file,
-        mode   => 644,
+        mode   => "644",
         source => '/vagrant/files/php/fpm/php-fpm.conf',
         require => Package[$php],
     }
@@ -233,7 +235,7 @@ class php-setup {
         owner  => root,
         group  => root,
         ensure => file,
-        mode   => 644,
+        mode   => "644",
         source => '/vagrant/files/php/fpm/pool.d/www.conf',
         require => Package[$php],
     }
@@ -242,27 +244,58 @@ class php-setup {
         ensure => running,
         require => Package["php5-fpm"],
     }
+}
 
-    #service { "mongodb":
-    #    ensure => running,
-    #    require => Package["mongodb"],
-    #}
+class hhvm_setup {
+
+    exec { 'install software-properties-common':
+        command => '/usr/bin/apt-get install -y software-properties-common',
+    }
+
+    exec { 'add hhvm key':
+        command => '/usr/bin/apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449',
+        require => Exec["install software-properties-common"],
+    }
+
+    exec { 'add hhvm repository':
+        command => '/usr/bin/add-apt-repository "deb http://dl.hhvm.com/ubuntu $(lsb_release -sc) main"',
+        require => Exec["add hhvm key"],
+    }
+
+    exec { 'hhvm update':
+        command => '/usr/bin/apt-get update',
+        require => Exec['add hhvm repository'],
+    }
+
+    exec { 'hhvm install':
+        command => '/usr/bin/apt-get install -y hhvm',
+        require => Exec['hhvm update'],
+    }
+
+    file { '/etc/hhvm/php.ini':
+        owner  => root,
+        group  => root,
+        ensure => file,
+        mode   => "644",
+        source => '/vagrant/files/hhvm/php.ini',
+        require => Exec['hhvm install'],
+    }
+
+    exec { 'hhvm run at startup':
+        command => '/usr/sbin/update-rc.d hhvm defaults',
+        require => Exec['hhvm install'],
+    }
 }
 
 class composer {
-    exec { 'install composer php dependency management':
-        command => 'curl -s http://getcomposer.org/installer | php -- --install-dir=/usr/bin && mv /usr/bin/composer.phar /usr/bin/composer',
-        creates => '/usr/bin/composer',
-        require => [Package['php5-cli'], Package['curl']],
+    exec { 'install composer':
+        command => 'curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer',
+        environment => ["COMPOSER_HOME=/usr/local/bin"],
+        require => Package['curl'],
     }
-
-    #exec { 'composer self update':
-    #    command => 'COMPOSER_HOME="/usr/bin/composer" composer self-update',
-    #    require => [Package['php5-cli'], Package['curl'], Exec['install composer php dependency management']],
-    #}
 }
 
-class ohmyzsh-setup {
+class ohmyzsh_setup {
     class { 'ohmyzsh': }
 
     ohmyzsh::install { 'vagrant': }
@@ -281,7 +314,7 @@ class memcached {
     }
 }
 
-class elasticsearch-setup {
+class elasticsearch_setup {
 
     class { 'elasticsearch':
       manage_repo  => true,
@@ -305,7 +338,7 @@ class { 'apt':
   },
 }
 
-class mongodb-setup {
+class mongodb_setup {
 
     class {'::mongodb::globals':
         manage_package_repo => true,
@@ -322,18 +355,19 @@ class mongodb-setup {
 
 Exec["apt-get update"] -> Package <| |>
 
-include system-update
-include dev-packages
-include nginx-setup
-include mongodb-setup
-include php-setup
+include system_update
+include dev_packages
+include nginx_setup
+include mongodb_setup
+include php_setup
+include hhvm_setup
 include composer
 include phpqatools
 include memcached
 include redis
-include mysql-access-setup
-include ohmyzsh-setup
-include elasticsearch-setup
+include mysql_access_setup
+include ohmyzsh_setup
+include elasticsearch_setup
 
 
 
