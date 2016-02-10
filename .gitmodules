@@ -43,3 +43,6 @@
 [submodule "puppet/modules/varnish"]
 	path = puppet/modules/varnish
 	url = https://github.com/alvagante/puppet-varnish
+[submodule "puppet/modules/nginx"]
+	path = puppet/modules/nginx
+	url = https://github.com/BlendMarketing/puppet-nginx.git
