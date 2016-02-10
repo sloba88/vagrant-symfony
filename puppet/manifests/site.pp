@@ -285,6 +285,11 @@ class hhvm_setup {
         command => '/usr/sbin/update-rc.d hhvm defaults',
         require => Exec['hhvm install'],
     }
+
+    exec { 'reset hhvm':
+        command => '/etc/init.d/hhvm restart',
+        require => Exec['hhvm run at startup']
+    }
 }
 
 class composer {
