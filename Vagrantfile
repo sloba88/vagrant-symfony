@@ -12,8 +12,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.synced_folder ".", "/vagrant",
     	:nfs => (RUBY_PLATFORM =~ /linux/ or RUBY_PLATFORM =~ /darwin/)
 
-    #config.vm.provision :shell, :path => "upgrade_puppet.sh"
-
     config.puppet_install.puppet_version = :latest
 
     config.vm.provider "virtualbox" do |v|

@@ -2,12 +2,15 @@
 (originally forked from irmantas/symfony2-vagrant) 
 
 ## Installation
-####This setup is based and tested with Ubuntu Trusty(14.04) 64 bit base box, with Vagrant 1.7.4 version and latest Virtual Box
+####This setup is based and tested with Ubuntu Trusty(14.04) 64 bit base box, with Vagrant 1.8.1 version and latest Virtual Box
 
 * Install Vagrant using using the [installation instructions](http://docs.vagrantup.com/v2/installation/index.html)
 
 * If you are on Windows OS install NFS support plugin [more information and detailed installation instructions](https://github.com/GM-Alex/vagrant-winnfsd):
     ```vagrant plugin install vagrant-winnfsd```
+
+* Install Vagrant puppet plugin
+   ```$ vagrant plugin install vagrant-puppet-install ```
 
 * Clone this repository
 
@@ -19,9 +22,9 @@
 * run vagrant (for the first time it should take up to 10-15 min)
     ```$ vagrant up```
     
-* Web server is accessible with http://33.33.33.10 (IP address can be changed in Vagrantfile)
+* Web server is accessible with http://33.33.33.100 (IP address can be changed in Vagrantfile)
 
-* PhpMyAdmin is accessible with http://33.33.33.10/phpmyadmin
+* PhpMyAdmin is accessible with http://33.33.33.100/phpmyadmin
 
 * Vagrant automatically setups database with this setup:
 
@@ -36,6 +39,7 @@
 * [Nginx](http://nginx.org/en/) using puppet module from [example42](https://github.com/example42/puppet-nginx)
 * [MySQL](http://www.mysql.com/) using puppet module from [example42](https://github.com/example42/puppet-mysql)
 * [PHP-FPM](http://php-fpm.org/) (PHP 5.6.17)
+* [HHVM](http://hhvm.com/) (HipHop VM 3.11.1)
 * [PhpMyAdmin](http://www.phpmyadmin.net/home_page/index.php)
 * [MongoDB](http://www.mongodb.org/)
 * [Redis](http://redis.io/)
